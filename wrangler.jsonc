@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "corvimet",
+  "compatibility_date": "2026-11-18",
+  // Sitio 100 % estático: sin script de Worker; _headers aplica a todas las respuestas
+  "assets": {
+    "directory": "./public/",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  },
+  "workers_dev": true,
+  "preview_urls": false
+}

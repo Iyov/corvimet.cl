@@ -1,0 +1,2 @@
+var wc_password_strength_meter_params = {"min_password_strength":"3","stop_checkout":"","i18n_password_error":"Please enter a stronger password.","i18n_password_hint":"Consejo: La contrase\u00f1a debe contener al menos 12 caracteres de longitud. Para hacerla m\u00e1s segura, usa min\u00fasculas y may\u00fasculas, n\u00fameros y s\u00edmbolos como ! \" ? $ % ^ & )."};
+//# sourceURL=wc-password-strength-meter-js-extra

@@ -1,0 +1,28 @@
+# Mirror en bruto (se regenera con tools/mirror.py)
+site/
+
+# Salidas de verificación
+screenshots/
+
+# Cloudflare / Node
+.wrangler/
+node_modules/
+.dev.vars*
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editores / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Configuración local de Claude Code
+.claude/settings.local.json

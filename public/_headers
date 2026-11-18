@@ -1,0 +1,31 @@
+# Cabeceras de seguridad para Cloudflare Workers Static Assets.
+# Límites: 100 reglas, 2.000 caracteres por línea. Ver docs/SSD.md §6.
+# No definir Cache-Control en /* (si varias reglas coinciden, sus valores se concatenan con coma).
+
+/*
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src-elem 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; media-src 'self'; manifest-src 'self'; worker-src 'self'; frame-src https://maps.google.com https://www.google.com; form-action 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), bluetooth=(), browsing-topics=(), camera=(), display-capture=(), document-domain=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), hid=(), identity-credentials-get=(), idle-detection=(), interest-cohort=(), local-fonts=(), magnetometer=(), microphone=(), midi=(), otp-credentials=(), payment=(), picture-in-picture=(), publickey-credentials-create=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), storage-access=(), usb=(), web-share=(), window-management=(), xr-spatial-tracking=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  Origin-Agent-Cluster: ?1
+  X-Permitted-Cross-Domain-Policies: none
+  X-DNS-Prefetch-Control: off
+
+# Archivos con nombre por hash de contenido: inmutables
+/assets/inline/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Recursos del tema y plugins (sin versión en el nombre): 7 días
+/wp-content/*
+  Cache-Control: public, max-age=604800
+/wp-includes/*
+  Cache-Control: public, max-age=604800
+/_ext/*
+  Cache-Control: public, max-age=604800
+
+/.well-known/security.txt
+  Content-Type: text/plain; charset=utf-8

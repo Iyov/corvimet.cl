@@ -1,0 +1,2 @@
+var ht_ctc_chat_var = {"number":"56937758648","pre_filled":"Hola Corvimet.\r\nQuisiera recibir mas informaci\u00f3n sobre sus productos.","dis_m":"show","dis_d":"show","css":"display: none; cursor: pointer; z-index: 99999999;","pos_d":"position: fixed; bottom: 15px; left: 15px;","pos_m":"position: fixed; bottom: 15px; left: 15px;","schedule":"no","se":"120","ani":"no-animations","web":"y","ga":"yes","fb":"yes"};
+//# sourceURL=ht_ctc_app_js-js-extra
