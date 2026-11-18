@@ -158,7 +158,7 @@ Procedimientos detallados en [03-google-correo-migracion.md](03-google-correo-mi
 | RM-12 | Acceso por usuario con verificación (OTP por correo o Google) y revocable |
 | RT-08 | Cambiar el slug de un producto genera una redirección 301 (no se pierde SEO) |
 
-### 10.3 Arquitectura propuesta (Cloudflare)
+### 10.3 Arquitectura (Cloudflare), confirmada el 2026-11-18
 ```
 Navegador ──► Worker "corvimet" ──► Static Assets (public/: diseño y páginas)
                  │  HTMLRewriter: inyecta precio/oferta/stock desde D1 en /producto/* y /tienda/*
@@ -171,7 +171,10 @@ Cron Trigger: purga la caché cuando empieza o termina una oferta
 ```
 - **Por qué así:** se mantienen las URL y el diseño de la copia (SEO), no vuelve WordPress (superficie de ataque y mantenimiento), y todo corre en la misma cuenta y plan de Cloudflare.
 - **Flow:** API REST v2 (`https://www.flow.cl/api`, sandbox `https://sandbox.flow.cl/api`). Cada llamada se firma con HMAC-SHA256 de los parámetros ordenados, usando la `secretKey`. `apiKey` y `secretKey` se guardan como **secrets del Worker** (`wrangler secret put`), nunca en el repo; las ingresa el titular. Desarrollo y pruebas en sandbox. Verificar los detalles contra la documentación oficial de Flow al implementar.
-- **Alternativa descartada:** WooCommerce headless en cPanelHost. Trae el mantenedor y Flow listos, pero mantiene WordPress expuesto, con sus actualizaciones y su costo de hosting.
+- **Alternativas evaluadas y descartadas:**
+  - **WooCommerce completo renovado:** mantenedor, ofertas programadas y plugin de Flow nativos, pero con WordPress expuesto, actualizaciones mensuales, hosting PHP pagado y una CSP menos estricta.
+  - **WooCommerce headless:** integración compleja, sobre todo el checkout con el plugin de Flow.
+  - **SaaS (Jumpseller o Shopify):** mensualidad, cambio de URL y diseño limitado.
 
 ### 10.4 Seguridad específica
 - `/admin/*` y `/api/admin/*` detrás de Cloudflare Access (política por correo, OTP); además, el Worker valida el JWT `Cf-Access-Jwt-Assertion`. Defensa en profundidad.
