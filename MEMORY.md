@@ -11,6 +11,9 @@ Registro de decisiones, estado y aprendizajes. Las entradas nuevas van arriba.
 - Pendiente: validación de la propuesta, decidir el hosting y el dominio, conectar Workers Builds y probar en securityheaders.com.
 - Hallazgos móviles: el popup "Política de entrega" cubre toda la pantalla, el banner de cookies ocupa media pantalla y el botón de WhatsApp tapa "Ajustes de Cookies" (`MOBILE=1 node tools/check-browser.mjs …`).
 
+## Tienda actual (observada el 2026-11-18)
+- WooCommerce con Flow (`flowpaymentfl`, tarjetas de débito y crédito) como único medio de pago; sin envío configurado; checkout sin RUT.
+
 ## Infraestructura actual (DNS consultado el 2026-11-18)
 - Dominio corvimet.cl registrado en NIC Chile (titular: el cliente). NS: `ns1/ns2.cpanelhost.cl`. A: `190.107.177.34`.
 - **Correo en el mismo hosting** (MX `mail.corvimet.cl`; SPF `+a +mx +ip4:190.107.177.34 +ip4:200.63.100.99 include:_spf.cpanelhost.cl`). Al migrar el DNS hay que replicar MX, SPF y DKIM, y no dar de baja cPanelHost hasta definir dónde queda el correo.
@@ -24,6 +27,7 @@ Registro de decisiones, estado y aprendizajes. Las entradas nuevas van arriba.
 ## Decisiones
 | Fecha | Decisión | Motivo |
 |---|---|---|
+| 2026-11-18 | Venta online **obligatoria** con Flow (pasarela actual) y mantenedor de productos (precios, ofertas programadas, edición, pedidos) | Pedido del cliente; diseño en SSD §10: Worker + D1 + R2 + Access |
 | 2026-11-18 | La instalación de Search Console, GA4, conversiones de Ads y Google Business es parte del servicio ofrecido | Pedido del usuario; procedimiento en docs/03 |
 | 2026-11-18 | El correo se puede trasladar (cPanelHost, Workspace o Zoho); lo decide el cliente | El correo vive hoy en cPanelHost |
 | 2026-11-18 | Hosting en Cloudflare Workers Static Assets | GitHub Pages no permite cabeceras; Cloudflare recomienda Workers sobre Pages |

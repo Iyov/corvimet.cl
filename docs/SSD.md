@@ -9,7 +9,7 @@ Construir y publicar, desde este repositorio de GitHub, una réplica fiel del si
 
 **Dentro del alcance:** todas las páginas públicas (portada, tienda, 18 productos, 3 categorías, páginas institucionales y de demo), sus recursos (CSS, JS, imágenes y fuentes), el comportamiento de cliente (sliders, popups de Elementor, menú, banner de cookies, botón de WhatsApp), la 404 y las políticas de seguridad.
 
-**Fuera del alcance:** funciones que requieren PHP o base de datos: carrito, checkout, cuentas, envío de formularios y búsqueda (ver §8).
+**Alcance ampliado (2026-11-18):** la **venta online con Flow** (la pasarela que usa hoy corvimet.cl) es obligatoria, junto con un **mantenedor de productos** para precios, ofertas programadas, edición de productos y pedidos. El diseño está en §10. La copia estática (§4) es la base de las etapas 1 a 3; las limitaciones de §8 aplican solo a esa fase.
 
 ## 2. Contexto del sistema de origen
 Ver [01-documentacion-sitio.md](01-documentacion-sitio.md). Resumen: WordPress 7.1.4, WooCommerce 5.4.4, tema Astra 2.6.2, Elementor y Elementor Pro, alojado en Apache con LiteSpeed Cache.
@@ -116,7 +116,7 @@ Límites de Cloudflare: 100 reglas y 2.000 caracteres por línea (`verify.py` lo
 ## 8. Limitaciones
 | Función | Estado en la copia | Reemplazo sugerido |
 |---|---|---|
-| Añadir al carrito, carrito y checkout | Se ve la interfaz, pero la acción no se completa | Botón de WhatsApp o mailto por producto |
+| Añadir al carrito, carrito y checkout | Se ve la interfaz, pero la acción no se completa | **Etapa 5:** tienda propia con Flow (§10) |
 | Formularios WPForms y suscripción | El POST no se procesa | Worker con Turnstile y Email Routing, o un servicio externo |
 | Mi cuenta | Sin backend | Eliminar |
 | Búsqueda | Sin backend | Búsqueda en cliente (índice JSON) |
@@ -134,7 +134,57 @@ Límites de Cloudflare: 100 reglas y 2.000 caracteres por línea (`verify.py` lo
 
 Procedimientos detallados en [03-google-correo-migracion.md](03-google-correo-migracion.md).
 
-## 10. Trabajo futuro
+## 10. Tienda online (Flow) y mantenedor de productos
+
+### 10.1 Situación actual (observada el 2026-11-18)
+- Checkout de WooCommerce 5.4.4 con un solo medio de pago: **Flow** (plugin `flowpaymentfl`, método `flow_flow`, "Paga con tarjetas de débito o crédito").
+- Sin métodos de envío: el total es igual al subtotal. Campos de facturación: nombre, apellido, empresa, país, dirección, ciudad, región, código postal, teléfono y correo. **Sin RUT**.
+- Precios en CLP sin decimales. 18 productos simples, sin variaciones.
+
+### 10.2 Requisitos
+| ID | Requisito |
+|---|---|
+| RT-01 | Carrito y checkout propios; el pago se procesa con la **cuenta Flow existente** de Corvimet |
+| RT-02 | Confirmación del pago **solo** por la notificación servidor a servidor de Flow (`urlConfirmation`) verificada contra `payment/getStatus`; nunca por la redirección del navegador |
+| RT-03 | Pedido idempotente: `commerceOrder` único; las notificaciones repetidas no duplican el pedido |
+| RT-04 | El precio y el total se recalculan en el servidor desde la BD; el cliente no puede enviar precios |
+| RT-05 | Correo al cliente y aviso a Corvimet al confirmarse el pago |
+| RT-06 | RUT en el checkout (validación de dígito verificador) |
+| RT-07 | Despacho configurable: a coordinar, tarifa por zona o gratis sobre un monto (lo decide el cliente) |
+| RM-08 | Mantenedor: CRUD de productos (nombre, slug, descripción, ficha técnica, fotos, categoría, orden, visible, agotado) |
+| RM-09 | Precios y **ofertas programadas** (`sale_price`, `sale_from`, `sale_to` en hora de Chile); el precio vigente se calcula al momento de la consulta |
+| RM-10 | Lista de pedidos con estado (pagado → despachado → entregado) |
+| RM-11 | Bitácora de auditoría: quién cambió qué y cuándo (valor anterior y nuevo) |
+| RM-12 | Acceso por usuario con verificación (OTP por correo o Google) y revocable |
+| RT-08 | Cambiar el slug de un producto genera una redirección 301 (no se pierde SEO) |
+
+### 10.3 Arquitectura propuesta (Cloudflare)
+```
+Navegador ──► Worker "corvimet" ──► Static Assets (public/: diseño y páginas)
+                 │  HTMLRewriter: inyecta precio/oferta/stock desde D1 en /producto/* y /tienda/*
+                 ├─► D1 (SQLite): products, prices, orders, order_items, audit_log, redirects
+                 ├─► R2: fotos de productos (subidas desde el mantenedor)
+                 ├─► /api/checkout ──► Flow API (payment/create) ──► redirección a Flow
+                 ├─► /api/flow/confirm ◄── Flow (urlConfirmation, POST token) → payment/getStatus
+                 └─► /admin/* (mantenedor) protegido por Cloudflare Access (Zero Trust)
+Cron Trigger: purga la caché cuando empieza o termina una oferta
+```
+- **Por qué así:** se mantienen las URL y el diseño de la copia (SEO), no vuelve WordPress (superficie de ataque y mantenimiento), y todo corre en la misma cuenta y plan de Cloudflare.
+- **Flow:** API REST v2 (`https://www.flow.cl/api`, sandbox `https://sandbox.flow.cl/api`). Cada llamada se firma con HMAC-SHA256 de los parámetros ordenados, usando la `secretKey`. `apiKey` y `secretKey` se guardan como **secrets del Worker** (`wrangler secret put`), nunca en el repo; las ingresa el titular. Desarrollo y pruebas en sandbox. Verificar los detalles contra la documentación oficial de Flow al implementar.
+- **Alternativa descartada:** WooCommerce headless en cPanelHost. Trae el mantenedor y Flow listos, pero mantiene WordPress expuesto, con sus actualizaciones y su costo de hosting.
+
+### 10.4 Seguridad específica
+- `/admin/*` y `/api/admin/*` detrás de Cloudflare Access (política por correo, OTP); además, el Worker valida el JWT `Cf-Access-Jwt-Assertion`. Defensa en profundidad.
+- CSRF: el mantenedor usa `SameSite=Strict` y verifica `Origin`. El checkout valida `Origin` y aplica rate limiting (Cloudflare WAF o Rate Limiting binding).
+- **CSP:** `form-action` debe incluir `https://www.flow.cl` (Chrome aplica `form-action` también a las redirecciones posteriores a un POST). En sandbox, `https://sandbox.flow.cl`. Sin scripts en línea, como en el resto del sitio.
+- `/api/flow/confirm`: solo POST; ignora el cuerpo salvo `token`; consulta el estado a Flow con firma y compara monto y moneda con el pedido en D1.
+- Datos personales de los pedidos: mínimos necesarios (Ley 19.628 y Ley 21.719 de protección de datos). Respaldo diario de D1 (Time Travel y export a R2).
+- Fotos subidas: validar tipo y tamaño; servir desde R2 con `Content-Type` correcto y `X-Content-Type-Options: nosniff`.
+
+### 10.5 Fuera de alcance de esta etapa
+Emisión automática de boleta o factura electrónica (SII). Se sigue emitiendo como hoy, salvo que se acuerde integrarla aparte.
+
+## 11. Trabajo futuro
 - Trusted Types en modo Report-Only con endpoint `report-to`.
 - Reemplazar el carrito por un flujo de pedido por WhatsApp y retirar WooCommerce JS.
 - Retirar páginas de demo en inglés (`/about/`, `/services/`, `/reviews/`, `/why-choose-us/`, `/sample-page/`, `/hello-world/`, producto `wea`) si el negocio lo aprueba.
