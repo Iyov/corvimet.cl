@@ -11,6 +11,16 @@ Registro de decisiones, estado y aprendizajes. Las entradas nuevas van arriba.
 - Pendiente: validación de la propuesta, decidir el hosting y el dominio, conectar Workers Builds y probar en securityheaders.com.
 - Hallazgos móviles: el popup "Política de entrega" cubre toda la pantalla, el banner de cookies ocupa media pantalla y el botón de WhatsApp tapa "Ajustes de Cookies" (`MOBILE=1 node tools/check-browser.mjs …`).
 
+## Infraestructura actual (DNS consultado el 2026-11-18)
+- Dominio corvimet.cl registrado en NIC Chile (titular: el cliente). NS: `ns1/ns2.cpanelhost.cl`. A: `190.107.177.34`.
+- **Correo en el mismo hosting** (MX `mail.corvimet.cl`; SPF `+a +mx +ip4:190.107.177.34 +ip4:200.63.100.99 include:_spf.cpanelhost.cl`). Al migrar el DNS hay que replicar MX, SPF y DKIM, y no dar de baja cPanelHost hasta definir dónde queda el correo.
+- Sin etiquetas de Google (Analytics, Ads, GTM) en el sitio ni verificación `google-site-verification` en DNS o HTML.
+
+## SEO y migración (requisito del cliente)
+- No perder posicionamiento: mismas URL (la copia ya las conserva), redirecciones 301 para las páginas eliminadas (`_redirects` de Workers), sitemap con el dominio final, línea base de Search Console antes del cambio y monitoreo por 8 semanas.
+- Search Console: propiedad de dominio verificada por DNS TXT, que se replica en el DNS nuevo.
+- Google Ads: medir conversiones (clic en WhatsApp, `tel:`, formulario) con Consent Mode v2. **Requiere ampliar la CSP** solo con los dominios de Google necesarios (googletagmanager.com, google-analytics.com, googleadservices.com, doubleclick.net); documentarlo en SSD §4.2 y §6.
+
 ## Decisiones
 | Fecha | Decisión | Motivo |
 |---|---|---|

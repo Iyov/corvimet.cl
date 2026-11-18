@@ -121,7 +121,17 @@ Límites de Cloudflare: 100 reglas y 2.000 caracteres por línea (`verify.py` lo
 | Mi cuenta | Sin backend | Eliminar |
 | Búsqueda | Sin backend | Búsqueda en cliente (índice JSON) |
 
-## 9. Trabajo futuro
+## 9. Migración y SEO
+| ID | Requisito |
+|---|---|
+| RM-01 | Todas las URL indexadas hoy responden 200 con la misma ruta, o 301 a su reemplazo (`public/_redirects`) |
+| RM-02 | `sitemap.xml` con el dominio final, enviado a Search Console el día del cambio |
+| RM-03 | Propiedad de dominio en Search Console verificada por TXT, replicada en el DNS nuevo |
+| RM-04 | El DNS nuevo replica MX, SPF y DKIM del correo actual (cPanelHost) antes de cambiar los NS en NIC Chile |
+| RM-05 | Línea base de Search Console (clics, impresiones, consultas y páginas principales) exportada antes del cambio; comparación semanal durante 8 semanas |
+| RM-06 | Medición de conversiones de Google Ads con Consent Mode v2; la CSP se amplía solo con los dominios de Google estrictamente necesarios |
+
+## 10. Trabajo futuro
 - Trusted Types en modo Report-Only con endpoint `report-to`.
 - Reemplazar el carrito por un flujo de pedido por WhatsApp y retirar WooCommerce JS.
 - Retirar páginas de demo en inglés (`/about/`, `/services/`, `/reviews/`, `/why-choose-us/`, `/sample-page/`, `/hello-world/`, producto `wea`) si el negocio lo aprueba.
