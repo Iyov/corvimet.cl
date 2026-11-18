@@ -37,6 +37,13 @@ const send = (method, params = {}) => new Promise((r) => {
   const i = ++id; pending.set(i, r); ws.send(JSON.stringify({ id: i, method, params }));
 });
 for (const d of ["Page", "Runtime", "Log", "Network", "Audits"]) await send(`${d}.enable`);
+// MOBILE=1 emula un teléfono (390x844, DPR 3, táctil)
+const mobile = process.env.MOBILE === "1";
+if (mobile) {
+  await send("Emulation.setDeviceMetricsOverride",
+    { width: 390, height: 844, deviceScaleFactor: 3, mobile: true });
+  await send("Emulation.setTouchEmulationEnabled", { enabled: true });
+}
 
 mkdirSync("screenshots", { recursive: true });
 let problems = 0;
@@ -69,7 +76,7 @@ for (const p of paths) {
   console.log(`\n=== ${p}  (${uniq.length} problemas)`);
   uniq.slice(0, 40).forEach((x) => console.log("  " + x));
   const shot = await send("Page.captureScreenshot", { format: "png" });
-  writeFileSync(join("screenshots", (p.replace(/\W+/g, "_") || "home") + ".png"),
+  writeFileSync(join("screenshots", (mobile ? "m" : "") + (p.replace(/\W+/g, "_") || "home") + ".png"),
     Buffer.from(shot.data, "base64"));
 }
 ws.close(); proc.kill();

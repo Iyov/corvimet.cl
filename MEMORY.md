@@ -6,7 +6,10 @@ Registro de decisiones, estado y aprendizajes. Las entradas nuevas van arriba.
 - Mirror completo: 86 URLs recorridas, 37 páginas únicas y unos 610 recursos. Faltan 3 que también fallan en el origen (`wp-comments-post.php` 403, `particles.min.js` 404, `shade.png` 404).
 - `public/`: 620 scripts y 448 estilos en línea extraídos (deduplicados en unos 90 archivos), 613 elementos de WordPress eliminados.
 - `verify.py`: 0 errores. Chrome Canary 160: 0 violaciones de CSP y 0 errores JS en 8 páginas.
-- Pendiente: crear el repo en GitHub, conectar Workers Builds, definir el dominio y probar en securityheaders.com.
+- Repo público: https://github.com/Iyov/corvimet.cl (CI `verify` en verde, Dependabot, secret scanning y push protection activos).
+- Encargo autorizado por los dueños de Corvimet: mejoras visuales y funcionales. Propuesta en 4 etapas enviada para validación (correcciones → fichas y cotización por WhatsApp → diseño nuevo → venta online opcional).
+- Pendiente: validación de la propuesta, decidir el hosting y el dominio, conectar Workers Builds y probar en securityheaders.com.
+- Hallazgos móviles: el popup "Política de entrega" cubre toda la pantalla, el banner de cookies ocupa media pantalla y el botón de WhatsApp tapa "Ajustes de Cookies" (`MOBILE=1 node tools/check-browser.mjs …`).
 
 ## Decisiones
 | Fecha | Decisión | Motivo |
