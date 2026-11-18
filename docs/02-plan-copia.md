@@ -1,4 +1,6 @@
-# Plan de copia de corvimet.cl
+# Plan de copia de corvimet.cl (fase 0)
+
+> Este documento cubre solo la **fase 0**: la copia endurecida, que ya está terminada. Las etapas siguientes (correcciones, fichas, diseño, mantenedor, tienda con Flow y publicación) están en [04-producto-y-mejoras.md](04-producto-y-mejoras.md) y en el [SSD](SSD.md).
 
 ## Objetivo
 Obtener una copia local **completa y navegable** del sitio (todas las páginas, productos, categorías y plantillas, con su HTML, CSS, JS, imágenes y fuentes) en `site/`, que se vea igual que el original sin depender de corvimet.cl.
@@ -31,7 +33,7 @@ WordPress genera HTML en el servidor, así que la forma fiel de copiarlo es un *
 | 1 a 5. Mirror | Hecho: 86 URLs, 37 páginas únicas, 3 fallos que también fallan en el origen |
 | 6 y 7. Verificación e iteración | Hecho: `verify.py` 0 errores; Chrome Canary 0 violaciones de CSP y 0 errores JS |
 | 8. Endurecimiento | Hecho |
-| 9. Publicación | Pendiente: crear el repo en GitHub y conectar Cloudflare |
+| 9. Publicación | Repo creado (`Iyov/corvimet.cl`, CI en verde). Pendiente: conectar Cloudflare Workers Builds ([05](05-despliegue-y-entornos.md)) |
 
 ## Estructura del proyecto
 
@@ -49,5 +51,5 @@ Corvimet.cl/
 - El mapa de Google sigue en línea (iframe).
 - `/finalizar-compra/` se guarda como el carrito vacío (el servidor redirige).
 
-## Siguientes pasos (fuera de este alcance)
-Decidir si la copia será un sitio estático (y reemplazar carrito y formularios por WhatsApp o un servicio externo) o una migración real de WordPress (exportar la base de datos y `wp-content`, lo que requiere acceso al hosting).
+## Siguientes pasos
+Decididos (2026-11-18): la copia es la base del sitio nuevo. El carrito y los formularios se reemplazan por la tienda propia con Flow y el mantenedor en Cloudflare (decisión D9 del [SSD](SSD.md)). Hoja de ruta en [04-producto-y-mejoras.md](04-producto-y-mejoras.md).

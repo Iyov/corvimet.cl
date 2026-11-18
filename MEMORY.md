@@ -7,8 +7,10 @@ Registro de decisiones, estado y aprendizajes. Las entradas nuevas van arriba.
 - `public/`: 620 scripts y 448 estilos en línea extraídos (deduplicados en unos 90 archivos), 613 elementos de WordPress eliminados.
 - `verify.py`: 0 errores. Chrome Canary 160: 0 violaciones de CSP y 0 errores JS en 8 páginas.
 - Repo público: https://github.com/Iyov/corvimet.cl (CI `verify` en verde, Dependabot, secret scanning y push protection activos).
-- Encargo autorizado por los dueños de Corvimet: mejoras visuales y funcionales. Propuesta en 4 etapas enviada para validación (correcciones → fichas y cotización por WhatsApp → diseño nuevo → venta online opcional).
-- Pendiente: validación de la propuesta, decidir el hosting y el dominio, conectar Workers Builds y probar en securityheaders.com.
+- Encargo autorizado por los dueños de Corvimet. Propuesta (entregable privado, fuera del repo) en **5 etapas + publicación**: correcciones → fichas y cotización → diseño nuevo → mantenedor → tienda con Flow → publicación (Google, dominio y correo). La venta online es **obligatoria**.
+- Documentación v2: SSD 2.0, `docs/04-producto-y-mejoras.md` (visión y criterios de aceptación) y `docs/05-despliegue-y-entornos.md` (entornos, secretos y paso a producción).
+- **Pendiente del cliente:** aprobación de la propuesta; uso del correo @corvimet.cl; reglas de despacho; forma de emitir la boleta o factura; correos de los administradores; titular de la cuenta de Cloudflare (D14); accesos de Flow, Google, NIC Chile y cPanelHost.
+- **Siguiente técnico:** crear la cuenta de Cloudflare, conectar Workers Builds (preview), y luego la etapa 1.
 - Hallazgos móviles: el popup "Política de entrega" cubre toda la pantalla, el banner de cookies ocupa media pantalla y el botón de WhatsApp tapa "Ajustes de Cookies" (`MOBILE=1 node tools/check-browser.mjs …`).
 
 ## Tienda actual (observada el 2026-11-18)

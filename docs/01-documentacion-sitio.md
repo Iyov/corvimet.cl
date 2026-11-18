@@ -92,7 +92,19 @@ unidad-motriz-bencinera, unidad-motriz-electrica, `wea` (producto de prueba).
 | maps.google.com | Mapa embebido (iframe; se mantiene en línea) |
 | s.w.org | Emojis de WordPress |
 
-## 8. Partes dinámicas (no funcionan en una copia estática)
+## 8. Tienda y pagos (observado el 2026-11-18)
+
+- **Pasarela:** Flow (plugin `flowpaymentfl`, método `flow_flow`), con el texto "Paga con tarjetas de débito o crédito". Es el único medio de pago.
+- **Despacho:** no configurado; el total es igual al subtotal.
+- **Campos del checkout:** nombre, apellido, empresa, país, dirección (2 líneas), ciudad, región, código postal, teléfono y correo. **No pide RUT.**
+- **Catálogo:** 18 productos simples sin variaciones; precios en CLP de $333.200 a $1.963.500. Categorías: Betoneras (11), Hormigón (6) y Placas (1).
+- **Medición:** sin Google Analytics, Ads ni Tag Manager.
+
+## 9. Infraestructura (DNS consultado el 2026-11-18)
+
+Hosting y correo en cPanelHost (A `190.107.177.34`, MX `mail.corvimet.cl`, NS `ns1/ns2.cpanelhost.cl`). Detalle en [03-google-correo-migracion.md](03-google-correo-migracion.md).
+
+## 10. Partes dinámicas (no funcionan en una copia estática)
 
 Dependen de PHP y de la base de datos de WordPress:
 
@@ -101,4 +113,4 @@ Dependen de PHP y de la base de datos de WordPress:
 - Búsqueda (`?s=`)
 - Fragmentos del carrito de WooCommerce (`wc-cart-fragments`)
 
-Para estas partes la copia mostrará la interfaz, pero la acción no se completará. Más adelante habrá que reemplazarlas (por ejemplo, con WhatsApp o mailto, o con un formulario en un servicio externo).
+Para estas partes la copia muestra la interfaz, pero la acción no se completa. Se reemplazan en las etapas 2 (formulario), 4 (mantenedor) y 5 (tienda con Flow); ver [04-producto-y-mejoras.md](04-producto-y-mejoras.md).

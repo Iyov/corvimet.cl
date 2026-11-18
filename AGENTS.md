@@ -3,10 +3,24 @@
 Instrucciones para agentes de código (Claude Code, Codex, Cursor, Copilot, etc.).
 
 ## Proyecto
-Copia estática de corvimet.cl (WordPress, WooCommerce y Elementor) servida por Cloudflare Workers Static Assets. Diseño completo en [docs/SSD.md](docs/SSD.md); decisiones y estado en [MEMORY.md](MEMORY.md).
+Nuevo sitio y tienda online de corvimet.cl en Cloudflare: páginas estáticas endurecidas (fase 0, terminada), más un Worker con D1, R2, Access y la API de Flow para el mantenedor de productos y la venta online (etapas 4 y 5). Lee primero:
+- [docs/04-producto-y-mejoras.md](docs/04-producto-y-mejoras.md): qué se construye y por qué (criterios de aceptación por etapa).
+- [docs/SSD.md](docs/SSD.md): requisitos (RF, RA, RT, RS, RM), arquitectura, modelo de datos, rutas y seguridad.
+- [docs/05-despliegue-y-entornos.md](docs/05-despliegue-y-entornos.md): entornos, secretos y despliegue.
+- [MEMORY.md](MEMORY.md): decisiones y estado.
 
-## Pipeline (no saltarse etapas)
+## Pipeline de la fase 0 (no saltarse etapas)
 `tools/mirror.py` (corvimet.cl → `site/`) → `tools/harden.py` (`site/` → `public/`) → `tools/verify.py` → navegador.
+
+## Reglas de la tienda y el mantenedor (etapas 4 y 5)
+- **Precio:** una sola función de precio vigente (oferta en ventana `America/Santiago`) usada por las páginas, el carrito y el checkout. El servidor **siempre** recalcula; nunca aceptar precios del cliente.
+- **Pagos:** se marcan como pagados solo tras `urlConfirmation` + `payment/getStatus` firmados y con monto igual; idempotencia por `commerce_order`. Nunca confiar en la redirección de retorno.
+- **Secretos:** `FLOW_API_KEY`, `FLOW_SECRET_KEY`, `TURNSTILE_SECRET` solo vía `wrangler secret`. Nunca en código, `wrangler.jsonc`, logs ni tests. Local en `.dev.vars` (gitignored).
+- **Admin:** toda ruta `/api/admin/*` valida el JWT de Cloudflare Access (`aud` e `iss`) y `Origin`; cada escritura deja un registro en `audit_log`.
+- **Cabeceras:** `_headers` no se aplica a las respuestas generadas por el Worker; usar el middleware común de cabeceras.
+- **D1:** cambios de esquema solo con migraciones nuevas en `migrations/` (nunca editar una ya aplicada). Aplicar en preview antes que en producción.
+- **SEO:** no cambiar URL públicas sin una redirección 301 (tabla `redirects` o `_redirects`).
+- **Pruebas:** Vitest con `@cloudflare/vitest-pool-workers`; obligatorias para precio vigente, firma Flow, idempotencia, RUT y JWT.
 
 ## Reglas
 - **Autoría:** el único autor de este repo es Francisco Barrientos (`francisco.barrientos@usach.cl`, cuenta GitHub `Iyov`). Ningún agente o herramienta de IA (Claude, Claude Code, Codex, Copilot, etc.) puede aparecer como autor, coautor ni contribuidor: no se usan trailers `Co-Authored-By`, líneas "Generated with…" en commits o PRs, ni identidades `noreply@anthropic.com` o similares.
