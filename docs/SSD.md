@@ -129,7 +129,10 @@ Límites de Cloudflare: 100 reglas y 2.000 caracteres por línea (`verify.py` lo
 | RM-03 | Propiedad de dominio en Search Console verificada por TXT, replicada en el DNS nuevo |
 | RM-04 | El DNS nuevo replica MX, SPF y DKIM del correo actual (cPanelHost) antes de cambiar los NS en NIC Chile |
 | RM-05 | Línea base de Search Console (clics, impresiones, consultas y páginas principales) exportada antes del cambio; comparación semanal durante 8 semanas |
-| RM-06 | Medición de conversiones de Google Ads con Consent Mode v2; la CSP se amplía solo con los dominios de Google estrictamente necesarios |
+| RM-06 | **Incluido en el alcance:** instalar Search Console, GA4, conversiones de Google Ads y Google Business, con Consent Mode v2. La CSP se amplía solo con los hosts oficiales de Google y sin scripts en línea |
+| RM-07 | El correo @corvimet.cl (hoy en cPanelHost) queda resuelto antes de dar de baja ese hosting: se mantiene ahí o se traslada a Workspace o Zoho |
+
+Procedimientos detallados en [03-google-correo-migracion.md](03-google-correo-migracion.md).
 
 ## 10. Trabajo futuro
 - Trusted Types en modo Report-Only con endpoint `report-to`.

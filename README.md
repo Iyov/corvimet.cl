@@ -40,6 +40,7 @@ Carrito, checkout, cuentas, formularios y búsqueda requerían WordPress y no fu
 - [docs/SSD.md](docs/SSD.md): especificación y diseño
 - [docs/01-documentacion-sitio.md](docs/01-documentacion-sitio.md): relevamiento del sitio original
 - [docs/02-plan-copia.md](docs/02-plan-copia.md): plan de ejecución
+- [docs/03-google-correo-migracion.md](docs/03-google-correo-migracion.md): Google (Search Console, GA4, Ads), correo y cambio de dominio
 - [SECURITY.md](SECURITY.md): reporte de vulnerabilidades
 
 El contenido, la marca y las imágenes pertenecen a Corvimet. Publica este repositorio solo con su autorización.

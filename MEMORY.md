@@ -24,6 +24,8 @@ Registro de decisiones, estado y aprendizajes. Las entradas nuevas van arriba.
 ## Decisiones
 | Fecha | Decisión | Motivo |
 |---|---|---|
+| 2026-11-18 | La instalación de Search Console, GA4, conversiones de Ads y Google Business es parte del servicio ofrecido | Pedido del usuario; procedimiento en docs/03 |
+| 2026-11-18 | El correo se puede trasladar (cPanelHost, Workspace o Zoho); lo decide el cliente | El correo vive hoy en cPanelHost |
 | 2026-11-18 | Hosting en Cloudflare Workers Static Assets | GitHub Pages no permite cabeceras; Cloudflare recomienda Workers sobre Pages |
 | 2026-11-18 | Extraer JS y CSS en línea en lugar de usar hashes en la CSP | Límite de 2.000 caracteres por línea en `_headers` |
 | 2026-11-18 | Verificación en navegador con Chrome Canary | Pedido del usuario: motor más reciente |
