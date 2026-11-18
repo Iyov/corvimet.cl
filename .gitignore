@@ -26,3 +26,6 @@ desktop.ini
 
 # Configuración local de Claude Code
 .claude/settings.local.json
+
+# Entregables para el cliente (no se publican en el repo)
+entregables/
