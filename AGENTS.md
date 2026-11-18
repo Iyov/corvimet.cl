@@ -9,6 +9,7 @@ Copia estática de corvimet.cl (WordPress, WooCommerce y Elementor) servida por 
 `tools/mirror.py` (corvimet.cl → `site/`) → `tools/harden.py` (`site/` → `public/`) → `tools/verify.py` → navegador.
 
 ## Reglas
+- **Autoría:** el único autor de este repo es Francisco Barrientos (`francisco.barrientos@usach.cl`, cuenta GitHub `Iyov`). Ningún agente o herramienta de IA (Claude, Claude Code, Codex, Copilot, etc.) puede aparecer como autor, coautor ni contribuidor: no se usan trailers `Co-Authored-By`, líneas "Generated with…" en commits o PRs, ni identidades `noreply@anthropic.com` o similares.
 - **No editar `public/` a mano.** Se regenera completo con `harden.py`. Los cambios van en `tools/harden.py` o en `config/`.
 - **Nunca** agregar a la CSP `'unsafe-inline'` en scripts, `'unsafe-eval'` ni hosts de terceros sin actualizar SSD §4.2 y §6 con la justificación.
 - Todo JS o CSS nuevo va en archivo externo. Nada de `<script>`, `<style>` ni `on*=` en línea.
